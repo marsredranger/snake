@@ -27,20 +27,27 @@ const PAUSED = "PAUSED";
 const PLAY = "PLAY";
 const GAME_OVER = "GAME_OVER";
 
+
 const game = {
   status: NEW_GAME,
-  keyup : false
+  keyup : false,
+  // TODO game will spawn food
+  foodSpawner : function() {}
 }
 
+
+// TODO Create method for snake to eat food and grow
 const snake = {
-  color: "#22ee22",
-  height: 32,
-  width: 32,
-  speed: SPEED,
-  cords: [[320, 320], [320, 352], [320, 384]],
-  direction: undefined,
-  firstMove: true,
-  alive: true,
+  init : function() {
+      this.color = "#22ee22";
+      this.height = 32;
+      this.width = 32;
+      this.speed = SPEED;
+      this.cords = [[320, 320], [320, 352], [320, 384]];
+      this.direction = undefined;
+      this.firstMove = true;
+      this.alive = true;
+  },
   draw() {
     for (cord of this.cords) {
       ctx.fillStyle = this.color;
@@ -108,16 +115,22 @@ const snake = {
   }
 }
 
+snake.init();
+
 function draw() {
   ctx.clearRect(0, 0, WIDTH, HEIGHT);
   ctx.fillStyle = "#222222";
   ctx.fillRect(0, 0, WIDTH, HEIGHT);
   snake.draw();
+  if (!snake.alive) {
+    game.status = GAME_OVER;
+  }
   // console.log(`x : ${snake.cords[0][0]}, y : ${snake.cords[0][1]} moving ${snake.direction}`);
   // console.log(`GAME STATUS : ${game.status} KEY UP : ${game.keyup}`);
   window.addEventListener("keydown", (event) => {
     // console.log(`key ${event.key}`);
-    if (game.status === NEW_GAME && event.key === NEW_GAME_KEY_CODE){
+    if ((game.status === NEW_GAME || game.status === GAME_OVER) && event.key === NEW_GAME_KEY_CODE){
+      snake.init();
       game.status = PLAY;
       game.keyup = true;
       snake.direction = UP;
@@ -125,7 +138,9 @@ function draw() {
       game.keyup = false;
       game.status = PLAY;
       snake.speed = SPEED;
-    } else if (!snake.firstMove && game.status !== PAUSED) {
+    } else if (!snake.alive) {
+
+    } if (!snake.firstMove && game.status !== PAUSED) {
       if (event.key === LEFT_KEY_CODE && snake.direction !== RIGHT && snake.direction !== LEFT) {
         snake.firstMove = true;
         snake.direction = LEFT;
