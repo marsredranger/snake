@@ -36,8 +36,6 @@ const RANDOM_MAX_Y = (HEIGHT - APPLE_SIZE) / APPLE_SIZE;
 
 const INTERVAL = 150;
 
-
-
 const game = {
   status: NEW_GAME,
   keyup: false,
@@ -52,9 +50,9 @@ const game = {
   },
   appleEaten: function() {
     if(snake.headCords[0] === apple.cords[0] && snake.headCords[1] === apple.cords[1]) {
-      snake.grow();
-      apple.spawned = false;
+      return true;
     }
+    return false;
   },
   snakeCollision: function() {
     for(let cords of snake.cords.slice(1)){
