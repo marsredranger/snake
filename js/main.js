@@ -281,7 +281,7 @@ snake.init();
 apple.init();
 game.status = DEMO;
 if(game.status === DEMO) {
-  computerSnake.init(snake.init());
+  computerSnake.init();
 }
 
 function draw() {
